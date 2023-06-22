@@ -1,6 +1,7 @@
 open! Base
 open! Import
 module CArray = Ctypes.CArray
+module Caml = Stdlib
 
 let carray_map v ~ctype ~f =
   let ca = CArray.make ctype (Array.length v) in

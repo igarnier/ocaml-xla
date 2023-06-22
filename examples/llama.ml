@@ -1,12 +1,12 @@
 (* An implementation of LLaMA https://github.com/facebookresearch/llama
    This only contains the inference part as the xla crate does not support backpropagation.
-  
+
    This is based on nanoGPT in a similar way to:
    https://github.com/Lightning-AI/lit-llama/blob/main/lit_llama/model.py
-  
+
    The tokenizer config can be retrieved via:
     wget https://huggingface.co/hf-internal-testing/llama-tokenizer/raw/main/tokenizer.json -O llama-tokenizer.json
-  
+
    In order to convert the llama weights to a .safetensors file, run:
    python examples/convert_llama_checkpoint.py ..../LLaMA/7B/consolidated.00.pth
 *)
@@ -17,6 +17,7 @@ module Ty = Xla.Element_type
 module Literal = Xla.Literal
 module Op = Xla.Op
 module Tokenizer = Sentencepiece_tokenizer
+module Caml = Stdlib
 
 let temperature = 1.0
 let use_gpu = false

@@ -1,5 +1,6 @@
 open! Import
 open! Base
+module Caml = Stdlib
 
 exception Cannot_write
 exception Read_error of string

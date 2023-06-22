@@ -12,6 +12,7 @@ module Element_type = Xla.Element_type
 module Literal = Xla.Literal
 module Op = Xla.Op
 module T = Gpt2_tokenizer
+module Caml = Stdlib
 
 let temperature = 0.8
 let use_gpu = true

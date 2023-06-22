@@ -1,5 +1,6 @@
 open Base
 module C = Configurator.V1
+module Caml = Stdlib
 
 let empty_flags = { C.Pkg_config.cflags = []; libs = [] }
 let ( /^ ) = Caml.Filename.concat

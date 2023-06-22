@@ -1,6 +1,7 @@
 (* Very naive implementation of the sentencepiece tokenizer, this only supports
    BPE models and not the unigram ones. *)
 open! Base
+module Caml = Stdlib
 
 let failwith_s s = Sexp.to_string s |> failwith
 
