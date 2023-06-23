@@ -1,0 +1,7 @@
+(library
+ (name typed_xla)
+ (public_name xla.typed)
+ (inline_tests)
+ (libraries xla)
+ (preprocess
+  (pps ppx_inline_test ppx_expect ppx_sexp_conv ppx_sexp_message)))
