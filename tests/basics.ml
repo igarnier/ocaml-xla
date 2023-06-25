@@ -19,6 +19,12 @@ let sexp_of_bigarray (type a b) (ba : (a, b, _) Bigarray.Genarray.t) =
   | dims ->
     [%message "unsupported shape" (dims : int array)] |> Sexp.to_string |> failwith
 
+let print literal =
+  let open Xla in
+  let ba = Literal.to_bigarray literal ~kind:Bigarray.float32 in
+  let dims = Bigarray.Genarray.dims ba in
+  Stdio.print_s [%message (dims : int array) (ba : bigarray)]
+
 let eval ~args ~f =
   let open Xla in
   let cpu = Client.cpu () in
@@ -28,9 +34,7 @@ let eval ~args ~f =
   let exe = Executable.compile cpu computation in
   let buffers = Executable.execute exe args in
   let literal = Buffer.to_literal_sync buffers.(0).(0) in
-  let ba = Literal.to_bigarray literal ~kind:Bigarray.float32 in
-  let dims = Bigarray.Genarray.dims ba in
-  Stdio.print_s [%message (dims : int array) (ba : bigarray)]
+  print literal
 
 let%expect_test _ =
   set_log_level ();
@@ -58,3 +62,16 @@ let%expect_test _ =
   [%expect {|
         ((dims ()) (ba 13))
       |}]
+
+let%expect_test _ =
+  let open Typed_xla in
+  set_log_level ();
+  let { lit; _ } =
+    exec
+      (program
+         (arg Type.f32 @-> arg Type.f32 @-> returning ~shape:(Shape.rank_one 1) Type.f32)
+         (fun x1 x2 -> add x1 x2))
+      [ lit @@ Arr.of_array_f32 [| 39.0 |]; lit @@ Arr.of_array_f32 [| 3.0 |] ]
+  in
+  Arr.to_xla lit |> print;
+  [%expect {| ((dims (1)) (ba (42))) |}]
