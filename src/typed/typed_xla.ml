@@ -101,7 +101,7 @@ and (_, _, _) binop =
   | Sub : ('a, 'a, 'a) binop
   | Mul : ('a, 'a, 'a) binop
   | Div : ('a, 'a, 'a) binop
-  | Matmul : ('a * 'b, 'c * 'a, 'c * 'b) binop
+  | Matmul : ('r * 'k, 'k * 'c, 'r * 'c) binop
   | Dot : ('a, 'a, scalar) binop
 
 type ('sh, 'elt) literal =
@@ -386,9 +386,9 @@ let shape_constraints
     let input_shape = Shape.create () in
     let mid_shape = Shape.create () in
     let output_shape = Shape.create () in
-    Shape.join ~__LOC__ y_shape (Shape.tensor input_shape mid_shape);
-    Shape.join ~__LOC__ x_shape (Shape.tensor mid_shape output_shape);
-    Shape.tensor input_shape output_shape
+    Shape.join ~__LOC__ y_shape (Shape.tensor mid_shape input_shape);
+    Shape.join ~__LOC__ x_shape (Shape.tensor output_shape mid_shape);
+    Shape.tensor output_shape input_shape
   | Dot ->
     let xs = get_shape x in
     let ys = get_shape y in
